@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from typing import Dict, Tuple, Any, List
 from pycoach.core.engine.loops import run_single_epoch
+from pycoach.core.callbacks import CallBack
 import time
 from pycoach.metrics.generals import *
 import pandas as pd
@@ -48,6 +49,8 @@ class Trainer:
                 metric_dict[name] = F1Score(self.device)
             elif name == "mse":
                 metric_dict[name] = MeanSquaredError(self.device)
+            else:
+                raise NotImplementedError
             self.train_scores[name] = []
             self.validation_scores[name] = []
         self.train_scores["loss"] = []
@@ -57,7 +60,7 @@ class Trainer:
     def train(self, batch_size: int, num_epochs: int, training_steps: int = -1,
               validation_set: Any = None, logging_index: int = 10,
               validation_steps: int = -1, shuffle: bool = True,
-              drop_last_batches: bool = True):
+              drop_last_batches: bool = True, callback: CallBack = None):
 
         train_dl, val_dl = self._prepare_data(self.train_ds, validation_set,
                                               batch_size, shuffle, drop_last_batches)
@@ -76,6 +79,10 @@ class Trainer:
                 print(f"Validation scores : \n{pd.DataFrame(res_arr[1], index=[0])}")
                 for k in self.validation_scores.keys():
                     self.validation_scores[k].append(res_arr[1][k])
+            if callback:
+                is_continue_run = callback.update([self.train_scores, self.validation_scores], self.model)
+                if is_continue_run:
+                    break
             print("\n")
         print(f"Training Completed...")
         print(f"Executed in {round(time.time() - init, 4)} seconds.\n")

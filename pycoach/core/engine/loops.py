@@ -3,7 +3,6 @@ import torch.nn as nn
 from typing import Dict, List, Tuple, Any
 from pycoach.metrics.__base__ import Metric
 import time
-from tqdm import tqdm
 from torch.utils.data import DataLoader
 import numpy as np
 
@@ -42,6 +41,7 @@ def train_single_epoch(training_loader: DataLoader,
         loss, metric_arr = run_single_batch(batch, model, loss_fn, metrics, device)
         loss.backward()
         optimizer.step()
+        metric_arr = {k: round(v, 6) for k, v in metric_arr.items()}
         for k in train_metric_arr.keys():
             train_metric_arr[k].append(metric_arr[k])
         if index % logging_index == 0:
