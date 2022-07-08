@@ -1,4 +1,4 @@
-from pycoach.metrics.__base__ import Metric
+from torch_tutor.metrics.__base__ import Metric
 from torch import Tensor
 from numpy import argmax
 from sklearn.metrics import (accuracy_score,

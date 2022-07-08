@@ -1,7 +1,7 @@
 from torch import Tensor
 import torch.nn as nn
 from typing import Dict, List, Tuple, Any
-from pycoach.metrics.__base__ import Metric
+from torch_tutor.metrics.__base__ import Metric
 import time
 from torch.utils.data import DataLoader
 import numpy as np

@@ -2,10 +2,10 @@ import torch.nn as nn
 import torch
 from torch.utils.data import Dataset, DataLoader
 from typing import Dict, Tuple, Any, List
-from pycoach.core.engine.loops import run_single_epoch
-from pycoach.core.callbacks import CallBack
+from torch_tutor.core.engine.loops import run_single_epoch
+from torch_tutor.core.callbacks import CallBack
 import time
-from pycoach.metrics.generals import *
+from torch_tutor.metrics.generals import *
 import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")

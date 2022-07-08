@@ -5,7 +5,7 @@ DESCRIPTION = 'Simple & Efficient PyTorch Trainer'
 
 # Setting up
 setup(
-    name="pycoach",
+    name="torch_tutor",
     version=VERSION,
     author="sagnik1511 (Sagnik Roy)",
     author_email="<sagnik.jal00@gmail.com>",
@@ -16,7 +16,7 @@ setup(
     install_requires=["numpy", "pandas"],
     keywords=['python', 'pytorch', 'training', 'logging'],
     classifiers=[
-        "Development Status :: 1 - Revamping",
+        "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
