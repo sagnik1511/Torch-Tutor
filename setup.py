@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 DESCRIPTION = 'Simple & Efficient PyTorch Trainer'
 
 # Setting up
@@ -12,7 +12,6 @@ setup(
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    python_requires=">=3.9",
     install_requires=["numpy", "pandas"],
     keywords=['python', 'pytorch', 'training', 'logging'],
     classifiers=[
