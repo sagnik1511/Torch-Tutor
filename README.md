@@ -77,6 +77,8 @@ trainer.train(batch_size=32,
 
 ```
 
+Check in [Google Colab](https://colab.research.google.com/drive/1ce_sMuLcsHz-YCNLFYsQtM25qpYIZXIn?usp=sharing)
+
 ## Feature Description
 
 ### CallBack
