@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Torch-Trainer</h1>
+<h1>Torch-Tutor</h1>
 <img width="600px" src="https://github.com/sagnik1511/Torch-Tutor/blob/main/extras/banner.png"><br>
 <img src="https://forthebadge.com/images/badges/built-with-love.svg">
 <img src="https://forthebadge.com/images/badges/made-with-python.svg">
@@ -33,12 +33,12 @@ b) From Repository :
 
 Install the reporsitory :
 ```shell
-git clone https://github.com/sagnik1511/Torch-Tutor
+git clone https://github.com/sagnik1511/Torch-Tutor.git
 ```
 Go to the directory.
 ```shell
 cd Torch_Tutor
-python -m install torch_tutor
+pip -m install -v -e .
 ```
 
 ## Usage
