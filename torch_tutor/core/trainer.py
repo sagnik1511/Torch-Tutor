@@ -8,6 +8,7 @@ import time
 from torch_tutor.metrics.generals import *
 import pandas as pd
 import warnings
+import wandb
 warnings.filterwarnings("ignore")
 
 
@@ -60,39 +61,47 @@ class Trainer:
     def train(self, batch_size: int, num_epochs: int, training_steps: int = -1,
               validation_set: Any = None, logging_index: int = 10,
               validation_steps: int = -1, shuffle: bool = True,
-              drop_last_batches: bool = True, callback: CallBack = None):
-
+              drop_last_batches: bool = True, callback: CallBack = None,
+              connect_wandb: bool = True, exp_name: str = "sample_experiment"):
+        print(f"launching Experoment : {exp_name}.")
         train_dl, val_dl = self._prepare_data(self.train_ds, validation_set,
                                               batch_size, shuffle, drop_last_batches)
         device = torch.device(self.device)
         self.model.to(device)
+        print("Model loaded to device...\n")
         init = time.time()
+        run = wandb.init(project=exp_name) if connect_wandb else None
+        if connect_wandb:
+            run.watch(self.model, criterion=self.loss_fn, log_freq=100, log_graph=True)
         for epoch in range(num_epochs):
-            print(f"Epoch : {epoch + 1} :")
+            print(f"Epoch : {epoch + 1}\n")
             (self.model, self.optim), res_arr = run_single_epoch(train_dl, self.model, self.loss_fn, self.optim,
                                                                  training_steps, self.metrics, val_dl, validation_steps,
-                                                                 logging_index, self.device)
-            print(f"Training scores : \n{pd.DataFrame(res_arr[0], index=[0])}")
+                                                                 logging_index, self.device, run)
+            print(f"\nTraining scores : \n{pd.DataFrame(res_arr[0], index=[0])}")
             for k in self.train_scores.keys():
                 self.train_scores[k].append(res_arr[0][k])
             if validation_set:
                 print(f"Validation scores : \n{pd.DataFrame(res_arr[1], index=[0])}")
                 for k in self.validation_scores.keys():
                     self.validation_scores[k].append(res_arr[1][k])
+            print("\n")
             if callback:
                 is_continue_run = callback.update([self.train_scores, self.validation_scores], self.model)
                 if is_continue_run:
                     break
             print("\n")
-        print(f"Training Completed...")
+        print(f"Training Completed.")
         print(f"Executed in {round(time.time() - init, 4)} seconds.\n")
         self._prepare_training_report()
+        if connect_wandb:
+            run.finish()
 
     def _prepare_training_report(self):
         self.train_report = pd.DataFrame(self.train_scores)
         self.val_report = pd.DataFrame(self.validation_scores) \
             if len(self.validation_scores[next(iter(self.validation_scores.keys()))]) > 0 else pd.DataFrame()
-        print("Prepared training reports...")
+        print("Prepared training reports.")
 
     @staticmethod
     def _prepare_data(train_set: Dataset, val_set: Any,
@@ -100,5 +109,5 @@ class Trainer:
                       drop_last: bool = False) -> Tuple[DataLoader, Any]:
         train_dl = DataLoader(train_set, batch_size, shuffle, drop_last=drop_last)
         val_dl = DataLoader(val_set, batch_size, shuffle, drop_last=drop_last) if val_set else None
-
+        print(f"Data Prepared.")
         return train_dl, val_dl

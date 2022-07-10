@@ -31,7 +31,7 @@ def train_single_epoch(training_loader: DataLoader,
                        model: nn.Module, loss_fn: nn.Module,
                        optimizer: Any, training_steps: int,
                        metrics: Dict[str, Metric], logging_index: int,
-                       device: str = "cpu") -> Tuple[Tuple[nn.Module, Any], Dict[str, float]]:
+                       device: str = "cpu", wandb_runner=None) -> Tuple[Tuple[nn.Module, Any], Dict[str, float]]:
 
     train_metric_arr = {k: [] for k, _ in metrics.items()}
     train_metric_arr["loss"] = []
@@ -42,6 +42,8 @@ def train_single_epoch(training_loader: DataLoader,
         loss.backward()
         optimizer.step()
         metric_arr = {k: round(v, 6) for k, v in metric_arr.items()}
+        if wandb_runner:
+            wandb_runner.log({f"training_{k}": round(v, 6) for k, v in metric_arr.items()})
         for k in train_metric_arr.keys():
             train_metric_arr[k].append(metric_arr[k])
         if index % logging_index == 0:
@@ -73,12 +75,12 @@ def validate_single_epoch(val_loader: DataLoader, model: nn.Module,
 def run_single_epoch(train_loader: DataLoader, model: nn.Module, loss_fn: nn.Module, optimizer: Any,
                      training_steps: int, metrics: Dict[str, Metric],
                      val_loader: Any, val_steps: int, logging_index: int,
-                     device: str = 'cpu') -> Tuple[Tuple[nn.Module, Any], List[Dict[str, float]]]:
+                     device: str = 'cpu', wandb_runner=None) -> Tuple[Tuple[nn.Module, Any], List[Dict[str, float]]]:
     init = time.time()
     res_arr = []
     (model, optimizer), train_res = train_single_epoch(train_loader, model, loss_fn,
                                                        optimizer, training_steps,
-                                                       metrics, logging_index, device)
+                                                       metrics, logging_index, device, wandb_runner)
     train_res = {k: round(v, 6) for k, v in train_res.items()}
     res_arr.append(train_res)
     if val_loader:
@@ -86,5 +88,5 @@ def run_single_epoch(train_loader: DataLoader, model: nn.Module, loss_fn: nn.Mod
         val_res = {k: round(v, 6) for k, v in val_res.items()}
         res_arr.append(val_res)
 
-    print(f"Execution Time : {round(time.time() - init, 6)} seconds")
+    print(f"Execution Time : {round(time.time() - init, 4)} seconds.\n")
     return (model, optimizer), res_arr

@@ -4,13 +4,14 @@
 <img src="https://forthebadge.com/images/badges/built-with-love.svg">
 <img src="https://forthebadge.com/images/badges/made-with-python.svg">
 <img src="https://forthebadge.com/images/badges/built-with-science.svg">
+</div>
 <h2>GOALS of the Project</h2>
 <i>1. Reduces implementation time upto 50%.</i><br>
-<i>2. Presents Eye-catching Training Job Monitor</i><br>
+<i>2. Presents Eye-catching Training Job Monitor.</i><br>
 <i>3. Stores training data efficiently.</i><br>
-<b>Visit at <a href="https://pypi.org/project/torch-tutor/0.0.1/#description">PyPI</a></b><br>
-<b>Primary Release</b>
-</div>
+<i>4. Integrated with W&B.</i>
+<h4>Visit at <a href="https://pypi.org/project/torch-tutor/0.0.4/#description">PyPI</a></h4>
+<h4>Primary Release</h4>
 
 ## Installation
 
@@ -21,9 +22,11 @@
     b) Torch >= 1.11.0 + cu113
     
     Visit [Custom Installation PyTorch](https://pytorch.org/) to install the latest version(Date : 07-09-2022)
+
+
 2. Install the `torch_tutor` package.
 
-Procedures :
+#### Package Installation
 
 a) From PyPi :
 ```shell
@@ -38,7 +41,10 @@ git clone https://github.com/sagnik1511/Torch-Tutor.git
 Go to the directory.
 ```shell
 cd Torch_Tutor
-pip -m install -v -e .
+```
+Install from the local repository.
+```shell
+pip install -v -e .
 ```
 
 ## Usage
@@ -51,8 +57,7 @@ callback = CallBack(tracker="accuracy",
                     stop_epoch=5,
                     save_weights=True,
                     on="training",
-                    save_directory="../weight_directory"
-                    )
+                    save_directory="../weight_directory")
 
 trainer = Trainer(train_dataset="<add your train_dataset_here>",
                   model="<add your model here>",
@@ -73,7 +78,9 @@ trainer.train(batch_size=32,
               logging_index=10,
               shuffle=True,
               drop_last_batches=True,
-              callback=callback)
+              callback=callback,
+              connect_wandb=True,
+              exp_name="New Experiment")
 
 ```
 
@@ -145,8 +152,21 @@ from torch_tutor.core.trainer import Trainer
 
 `callback` [type: torch_tutor.core.callback.callBack] : CallBack function.
 
+`connect_wandb` [type: bool] : Flag to connect W&B loggers.
+
+`exp_name` [type: str] : Name of the experiment.
+
 ---
 
+## Module Functionalities Achieved
+
+- [x] Training through CPU / GPU / TPU.
+- [x] Basic Loggings & Reports.
+- [x] W&B Integration.
+- [ ] MLFlow Integration.
+- [ ] Distributed Training.
+- [ ] Multi-Model Training.
+- [ ] Effective Web-platform UI.
 
 <div align = "center">
 <h3>If you get any errors while running the code, please make a PR.</h3>
@@ -155,6 +175,3 @@ from torch_tutor.core.trainer import Trainer
 </div>
 
 <div align = "center"><h1>Also follow me on <a href="https://github.com/sagnik1511">GitHub</a> , <a href="https://kaggle.com/sagnik1511">Kaggle</a> , <a href="https://in.linkedin.com/in/sagnik1511">LinkedIn</a></h1></div>
-
-
-
